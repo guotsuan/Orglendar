@@ -14,7 +14,7 @@ local orglendar = { files = {},
                     text_color = theme.fg_normal or "#FFFFFF",
                     today_color = theme.fg_focus or "#00FF00",
                     event_color = theme.fg_urgent or "#FF0000",
-                    font = theme.font or 'monospace 8',
+                    font = 'Monaco 9' or  theme.font,
                     parse_on_show = true,
                     calendar_width = 21,
                     limit_todo_length = nil,
@@ -68,7 +68,7 @@ local function strip_time(time_obj)
    return os.time{day = tbl.day, month = tbl.month, year = tbl.year}
 end
 
-function orglendar.parse_agenda()
+local function parse_agenda()
    local today = os.time()
    data = { tasks = {}, dates = {}, maxlen = 20 }
 
@@ -262,7 +262,7 @@ local function calculate_char_width()
    return theme.get_font_height(font) * 0.555
 end
 
-function orglendar.hide()
+local function hide()
    if calendar ~= nil then
       naughty.destroy(calendar)
       naughty.destroy(todo)
@@ -271,7 +271,7 @@ function orglendar.hide()
    end
 end
 
-function orglendar.show(inc_offset)
+local function show(inc_offset)
    inc_offset = inc_offset or 0
 
    if not data or parse_on_show then
@@ -287,7 +287,7 @@ function orglendar.show(inc_offset)
    calendar = naughty.notify({ title = header,
                                text = cal_text,
                                timeout = 0, hover_timeout = 0.5,
-                               width = calendar_width * char_width,
+                               width = orglendar.calendar_width * char_width,
                                screen = mouse.screen,
                             })
    todo = naughty.notify({ title = "TO-DO list",
@@ -299,7 +299,7 @@ function orglendar.show(inc_offset)
 end
 
 function orglendar.register(widget)
-   widget:connect_signal("mouse::enter", function() orglendar.show(0) end)
+   widget:connect_signal("mouse::enter", function() show(0) end)
    widget:connect_signal("mouse::leave", hide)
    widget:buttons(util.table.join( awful.button({ }, 3, function()
                                                            parse_agenda()
