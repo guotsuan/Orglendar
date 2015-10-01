@@ -16,7 +16,7 @@ local orglendar = { files = {},
                     event_color = theme.fg_urgent or "#FF0000",
                     font = 'Monaco 9' or  theme.font,
                     parse_on_show = true,
-                    calendar_width = 21,
+                    calendar_width = 80,
                     limit_todo_length = nil,
                     date_format = "%d-%m-%Y" }
 
@@ -284,16 +284,17 @@ local function show(inc_offset)
 
    local char_width = char_width or calculate_char_width()
    local header, cal_text = create_calendar()
+
    calendar = naughty.notify({ title = header,
                                text = cal_text,
                                timeout = 0, hover_timeout = 0.5,
-                               width = orglendar.calendar_width * char_width,
+                              width = math.floor(orglendar.calendar_width * char_width),
                                screen = mouse.screen,
                             })
    todo = naughty.notify({ title = "TO-DO list",
                            text = create_todo(),
                            timeout = 0, hover_timeout = 0.5,
-                           width = (data.maxlen + 3) * char_width,
+                           width = math.floor((data.maxlen + 3) * char_width),
                            screen = mouse.screen,
                         })
 end
